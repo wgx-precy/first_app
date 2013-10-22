@@ -46,3 +46,7 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+#for xml
+gem 'builder'
+#for nokogiri
+gem 'nokogiri'
