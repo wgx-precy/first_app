@@ -2,6 +2,10 @@ FirstApp::Application.routes.draw do
   #get "users/new"
   get "xmls/generate"
   get "xmls/generate_builder"
+  post "xmls/generate_builder"
+  post "xmls/account"
+  get "xmls/vital_source_login"
+  get "xmls/generate_builder"
 
   root  :to => 'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'

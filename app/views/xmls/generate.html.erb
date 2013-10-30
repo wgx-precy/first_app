@@ -1,3 +1,38 @@
-<% provide(:title, 'Generate') %>
-<h1>generate xml</h1>
-<%= link_to "Generater_builder" %>
+<% provide(:title, 'Register') %>
+<h1>Register For VitalSource</h1>
+
+<%= form_tag( { :action => 'generate_builder', }, { :method => :post }) do %>
+<div class="email">
+	<%= label "#{@vs}", "email" %>
+	<%= text_field "#{@vs}", "email" %>
+</div>
+<div class="username">
+	<%= label "#{@vs}", "first name" %>
+	<%= text_field "#{@vs}", "first_name" %>
+</div>
+<div class="username">
+	<%= label "#{@vs}", "last name" %>
+	<%= text_field "#{@vs}", "last_name" %>
+</div>
+<div class="affiliate">
+	<%= label "#{@vs}", "affiliate" %>
+	<%= text_field "#{@vs}", "affiliate" %>
+</div>
+<div class="password">
+	<%= label "#{@vs}", "password"%>
+	<%= password_field "#{@vs}", "password" %><br>
+	<%= password_field "#{@vs}", "confirm_password" %>
+</div>
+<div class="question">
+	<%= label "#{@vs}", "Security Question" %>
+	<%= select "#{@vs}", "question_id",options_for_select([[@question[0],"1"],[@question[1],"2"],[@question[2],"3"],[@question[3],"4"],[@question[4],"5"]])%>
+</div>
+<div class="answer">
+	<%= label "#{@vs}", "Answer" %>
+	<%= text_field "#{@vs}", "answer" %>
+</div>
+<div class="submit">
+	<%= submit_tag("Create")%>
+</div>
+<% end %>
+

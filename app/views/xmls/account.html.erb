@@ -1,0 +1,10 @@
+<p>
+	<% if(!@err.nil?) %>
+	<h5>error:</h5>
+	<%= @err %>
+	<% end %>
+	<% if(!@user.nil?) %>
+	<h5>Account Information:</h5>
+	<%= @user %>
+	<% end %>
+</p>

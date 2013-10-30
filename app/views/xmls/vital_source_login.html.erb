@@ -1,0 +1,16 @@
+<% provide(:title, 'Login') %>
+<h1>Login</h1>
+<%= form_tag( { :action => 'account', }, { :method => :post }) do %>
+<div class="email">
+	<%= label "#{@vs}", "email" %>
+	<%= text_field "#{@vs}", "email" %>
+</div>
+<div class="password">
+	<%= label "#{@vs}", "password"%>
+	<%= password_field "#{@vs}", "password" %><br>
+</div>
+<div class="submit">
+	<%= submit_tag("Create")%>
+	<%= link_to "Register", "generate"%>
+</div>
+<% end %>

@@ -1,5 +1,10 @@
 <p>
-	<%=  @response %>
-	<%=  @request %>
-	<%=  @respond.inspect %>
+	<% if(!@user.nil?) %>
+	<h5>Account Information:</h5><br>
+	<%=  @user %>
+	<% end %>
+	<% if(!@err.nil?) %>
+	<h5>error:</h5><br>
+	<%=  @err %>
+	<% end %>
 </p>
