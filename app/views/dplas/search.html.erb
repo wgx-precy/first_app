@@ -1,0 +1,10 @@
+
+<%= form_tag( { :action => "results", }, { :method => :post }) do %>
+<div class="search">
+	<%= label "#{@dpla}", "search" %>
+	<%= text_field "#{@dpla}", "key" %>
+</div>
+<div class="submit">
+	<%= submit_tag("Search")%>
+</div>
+<% end %>

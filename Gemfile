@@ -48,5 +48,8 @@ end
 # gem 'debugger', group: [:development, :test]
 #for xml
 gem 'builder'
-#for nokogiri
+# html/xml parsers
 gem 'nokogiri'
+
+gem 'nokogiri-happymapper', :require => 'happymapper'
+

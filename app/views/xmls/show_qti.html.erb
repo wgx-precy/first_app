@@ -1,0 +1,62 @@
+<%= javascript_include_tag 'jquery', 'application' %>
+<script>
+$(document).ready(function(){
+	var i = 0;
+	var answers = $('#q_answers').text();
+	console.log(answers);
+	var this_answers = JSON.parse(answers);
+	console.log(this_answers);
+	var questions = $('#q_questions').text();
+	console.log(questions);
+	var this_questions = JSON.parse(questions);
+	console.log(this_questions);
+	var question_text = "";
+	question_text = question_text+this_questions[i];
+	var radio = "";
+	var length = this_answers['q'+i]['choice'].length;
+	for (var j = 0; j < length; j++) {
+		radio = radio + "<input type='radio' name='choice' value="+j+">"+this_answers['q'+i]['choice'][j]+"<br>"; 
+	};
+	var question_template = "<form>"+radio+"<input type='submit' id='answer_submit'></form> ";
+	$(".question").html(question_text);
+	$(".ans").html(question_template);
+	$("#next_question").click(function(){
+		i++;
+		question_text = this_questions[i];
+		radio = "";
+		length = this_answers['q'+i]['choice'].length;
+		for (var j = 0; j < length; j++) {
+			radio = radio + "<input type='radio' name='choice' value="+j+">"+this_answers['q'+i]['choice'][j]+"<br>"; 
+		};
+		question_template = "<form>"+radio+"<input type='submit' id='answer_submit'></form> ";
+		$(".question").html(question_text);
+		$(".ans").html(question_template);
+	});
+	$("#previous_question").click(function(){
+		i--;
+		question_text = this_questions[i];
+		radio = "";
+		length = this_answers['q'+i]['choice'].length;
+		for (var j = 0; j < length; j++) {
+			radio = radio + "<input type='radio' name='choice' value="+j+">"+this_answers['q'+i]['choice'][j]+"<br>"; 
+		};
+		question_template = "<form>"+radio+"<input type='submit' id='answer_submit'></form> ";
+		$(".question").html(question_text);
+		$(".ans").html(question_template);
+	});
+});
+</script>
+<%= @answer %>
+<br>
+<br>
+<br>
+<p id="q_answers" hidden><%= @answer.to_json %></p><b>
+<p id="q_questions" hidden><%= @question_content.to_json %></p><b>
+<div class="question">
+</div>
+<div class="ans">
+</div>
+
+
+<button type="button" id="previous_question">Previous</button>
+<button type="button" id="next_question">Next</button>

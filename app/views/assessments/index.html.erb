@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span8 offset2">
+
+      <h1 class="row-fluid">Your Assessments</h1>
+
+      <div class="assessment_list well row-fluid">
+        <ul>
+          <%= render :collection => @assessments, :partial => 'assessments/list_item', :as => :assessment %>
+        </ul>
+        <%= link_to "<i class='icon-plus'></i> Create an Assessment".html_safe, new_assessment_path, :class => 'nav_link'  %>
+      </div>
+
+
+      <h1 class="row-fluid">View an Assessment Hosted Somewhere Else</h1>
+
+      <div class="assessment_list well row-fluid">
+
+        <%= form_for :assessment, :url => assessments_path, :html => { :id => "new-assessment-form", :name => 'new-assessment-form', :class => 'form-horizontal' } do |f| -%>
+
+          <div class="control-group">
+            Enter the web address of a QTI format assessment
+            <div id="xml_file_option">
+              <%= f.text_field :src_url, { :name => 'assessment[src_url]' } %>
+            </div>
+            <div>(e.g. <%= "http://#{request.host_with_port}/assessment.xml" %>)</div>
+          </div>
+
+          <%= f.submit 'View Assessment', :class => 'btn' %>
+        <% end -%>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

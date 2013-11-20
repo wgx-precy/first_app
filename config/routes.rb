@@ -1,11 +1,19 @@
 FirstApp::Application.routes.draw do
   #get "users/new"
+  #vital source
+  get "assessments/index"
+  get "assessments/show"
+  get "sections/index"
   get "xmls/generate"
   get "xmls/generate_builder"
+  get "xmls/show_qti"
   post "xmls/generate_builder"
   post "xmls/account"
   get "xmls/vital_source_login"
   get "xmls/generate_builder"
+  #dpla
+  get "dplas/search"
+  post "dplas/results"
 
   root  :to => 'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'

@@ -1,0 +1,23 @@
+
+<% @contents.each do |v| %>
+	<ul class="border">
+		<!-- <li><%=v.to_s%></li> -->
+
+		<li><%= image_tag v["object"].to_s,:title => v["sourceResource"]["title"].to_s %></li>
+	<!-- 	<li><%=v["object"]%></li> -->
+		<li><%= image_tag "link_icon.png", :size => "30x10"%><a href="<%=v["isShownAt"].to_s%>" target="_blank"><%=v["sourceResource"]["title"].to_s.delete "[\"\"]" %></a></li>
+		<% if(!v["sourceResource"]["creator"].nil?) %>
+			<li>Author:   <%=v["sourceResource"]["creator"].to_s.delete "[\"\"]" %></li>
+		<% end %>
+		<% if(!v["sourceResource"]["subject"].nil?) %>
+			<li>Subject:  <%=v["sourceResource"]["subject"][0]["name"].to_s.delete "\s\r"%></li>
+		<% end %>
+		<% if(!v["sourceResource"]["language"].nil?) %>
+			<li>Language: <%=v["sourceResource"]["language"][0]["name"]%></li>
+		<% end %>
+	</ul>
+<% end -%>
+<!-- <p><%= @return %></p> -->
+		<!-- video type -- ["originalRecord"]["PrimoNMBib"]["record"]["display"]["lds18"] -->
+
+		

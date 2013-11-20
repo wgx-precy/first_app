@@ -108,4 +108,47 @@ class XmlsController < ApplicationController
 	def hijack_response(out_data)
 		send_data(out_data, :type => "text/xml", :filename => "sample.xml")
 	end
+
+	def show_qti
+		questions = Hash.new
+    	contents = Hash.new
+		@i = 0
+		assessment = File.open("/Users/guoxuwang/Desktop/quiz6.xml", "rb") {|io| io.read}
+    	xml = Nokogiri.XML(assessment)
+    	@qti = xml
+    	qit_title = Array.new
+    	xml.css('item').each do |subitem|
+    		qit_title << subitem.xpath('@title').to_s
+    	end
+    	qit_question = Array.new
+    	xml.css('presentation/material/mattext').each_with_index do |question_text,i|
+      		qit_question << question_text.to_s
+    	end
+    	xml.css('render_choice').each_with_index do |render_choice,i|
+    		qit_sub_answer = Array.new()
+    		render_choice.css('response_label/material/mattext').each do |material|
+    			qit_sub_answer << material.content
+    		end
+    		id = "q"+i.to_s;
+    		contents['choice'] = qit_sub_answer
+    		questions[id] = contents
+    	end
+    	render :text => questions
+    	@answer = questions
+    	@question_content = qit_question
+	end
+
+
+  	def parse_identifier(xml)
+    	xml.css('item').xpath('@ident').to_s
+  	end
+
+	def parse_question_text(xml)
+    	text = ""
+    	xml.css('presentation/material/mattext').each do |question_text|
+      	text = question_text.content
+    	end
+    	text
+ 	 end
+
 end
