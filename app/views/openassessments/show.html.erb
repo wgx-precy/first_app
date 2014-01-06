@@ -1,0 +1,186 @@
+
+<%= javascript_include_tag 'jquery', 'application' %>
+<script>
+$(document).ready(function(){
+	var i = 0;
+
+	var user_answered_list_last_click;
+
+	var user_answered_list=[];
+
+	var questions = $('#q_questions').text();
+	// console.log(questions);
+	var this_questions = JSON.parse(questions);
+	// console.log(this_questions);
+
+	var answers = $('#correct_answers').text();
+	var this_answers = JSON.parse(answers);
+	// alert(this_questions[0][2][0][1]);
+	var question_text = "";
+	question_text = question_text+this_questions[i][1];
+	var radio = "";
+	var length = this_questions[i][2].length;
+	for (var j = 0; j < length; j++) {
+		radio = radio + "<input type='radio' id='r"+j+"' name='choice' value="+this_questions[i][2][j][0]+">"+this_questions[i][2][j][1]+"<br>"; 
+	};
+	var question_template = radio;
+	$(".question").html(question_text);
+	$(".ans").html(question_template);
+	$("#previous_question").attr("disabled","disabled");
+	$("#answer_submit").click(function(e){
+		e.preventDefault();
+		var selected = $('input:checked', '#question_form').val();
+		var check_answer = [0,0];
+		var list_template = "<div id=\"answered_id\" value = "+i+" >Question "+i+"</div>"
+		//alert(selected);
+		check_answer[0] = $('input:checked', '#question_form').attr("id");
+		// alert(this_answers[this_questions[i][0]]);
+		if (selected==this_answers[this_questions[i][0]]){
+			//alert("correct");
+			check_template = "<p class='result'><font color='green'>correct</font></p>"
+			check_answer[1] = 1;
+		}
+		else{
+			//alert("incorrect");
+			check_template = "<p class='result'><font color='red'>incorrect</font></p>"
+			check_answer[1] = 0;
+		}
+		user_answered_list[i] = check_answer;
+		$(".check_result").html(check_template);
+		//alert(user_answered_list_last_click);
+		if(typeof(user_answered_list_last_click) != "undefined" && user_answered_list_last_click !== null)
+		{
+			user_answered_list_last_click.remove();
+		}
+		$(".answered_question_list").append(list_template);
+	});
+	$("#next_question").click(function(){
+		$( ".result" ).remove();
+		i++;
+		if(i > 0)
+		{
+			$("#previous_question").removeAttr("disabled");
+		}
+		if(i == this_questions.length-1)
+		{
+			$("#next_question").attr("disabled","disabled");
+			// $("#answer_submit").attr("disabled","disabled");
+		}
+		question_text = this_questions[i][1];
+		radio = "";
+		length = this_questions[i][2].length;
+		for (var j = 0; j < length; j++) {
+			radio = radio + "<input type='radio' id='r"+j+"' name='choice' value="+this_questions[i][2][j][0]+">"+this_questions[i][2][j][1]+"<br>"; 
+		};
+		question_template = radio;
+		$(".question").html(question_text);
+		$(".ans").html(question_template);
+	});
+	$("#previous_question").click(function(){
+		$( ".result" ).remove();
+		i--;
+		if(i == 0)
+		{
+			$("#previous_question").attr("disabled","disable");
+		}
+		if(i < this_questions.length-1)
+		{
+			$("#next_question").removeAttr("disabled");
+			// $("#answer_submit").removeAttr("disabled");
+		}
+		question_text = this_questions[i][1];
+		radio = "";
+		length = this_questions[i][2].length;
+		for (var j = 0; j < length; j++) {
+			radio = radio + "<input type='radio' id='r"+j+"' name='choice' value="+this_questions[i][2][j][0]+">"+this_questions[i][2][j][1]+"<br>"; 
+		};
+		question_template = radio;
+		$(".question").html(question_text);
+		$(".ans").html(question_template);
+	});
+	$(".answered_question_list").click(function(event){
+		var target = $(event.target);
+		user_answered_list_last_click = target;
+		var a_id = target.attr("value");
+		review(a_id);
+		//alert(a_id);
+	});
+
+	function review(id){
+		$( ".result" ).remove();
+		i = parseInt(id);
+		if(i > 0)
+		{
+			$("#previous_question").removeAttr("disabled");
+		}
+		if(i == this_questions.length-1)
+		{
+			$("#next_question").attr("disabled","disabled");
+			// $("#answer_submit").attr("disabled","disabled");
+		}
+		question_text = this_questions[i][1];
+		radio = "";
+		length = this_questions[i][2].length;
+		for (var j = 0; j < length; j++) {
+			radio = radio + "<input type='radio' id='r"+j+"' name='choice' value="+this_questions[i][2][j][0]+">"+this_questions[i][2][j][1]+"<br>"; 
+		};
+		question_template = radio;
+		$(".question").html(question_text);
+		$(".ans").html(question_template);
+		var input = "input:radio[id="+user_answered_list[i][0]+"]";
+		$(input).prop('checked',true)
+		if(user_answered_list[i][1] == 1){
+			check_template = "<p class='result'><font color='green'>correct</font></p>"
+		}
+		else{
+			check_template = "<p class='result'><font color='red'>incorrect</font></p>"
+		}
+		$(".check_result").html(check_template);
+	}
+});
+</script>
+<html>
+<body>
+<br>
+<br>
+<br>
+<div class='assessment'>
+<!-- 	<div class='question_list'>
+		<p>question list</p>
+	</div> -->
+	<div class='question_template'>
+		<!-- <p id="question_answers" hidden><%= @question_answers.to_json %></p><b> -->
+		<!-- <p id="question_options" hidden><%= @answers_array.to_json %></p><b> -->
+		<p id="correct_answers" hidden><%= @answers_array.to_json %>
+		<p id="q_questions" hidden><%= @questions_array.to_json %></p><b>
+		<div class="question">
+		</div>
+		<form id='question_form'>
+			<div class="ans">
+			</div>
+		</form>
+		<div class = "check_result">
+		</div>
+		<button type='submit' id='answer_submit'>Check Answer</button>
+		<button type="button" id="previous_question">Previous</button>
+		<button type="button" id="next_question">Next</button><br>
+	</div>
+	<h5>Answered List</h5>
+	<div class="answered_question_list">
+		
+		<!-- <div id="answered_id" value = 1 >Question 1</div><br> -->
+	</div>
+
+</div>
+
+
+</body>
+</html>
+
+
+<!-- db.assessments.find({ "_id":ObjectId("52cadedeaa60970338000002")})
+db.assessments.find(
+{ "_id":ObjectId("52cadedeaa60970338000001"),
+questions:[]
+}
+) -->

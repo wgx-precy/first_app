@@ -124,18 +124,40 @@ class XmlsController < ApplicationController
     	xml.css('presentation/material/mattext').each_with_index do |question_text,i|
       		qit_question << question_text.to_s
     	end
+    	question_answer = Array.new
+    	question_option = Array.new
     	xml.css('render_choice').each_with_index do |render_choice,i|
     		qit_sub_answer = Array.new()
+    		qit_sub_choice = Array.new()
     		render_choice.css('response_label/material/mattext').each do |material|
     			qit_sub_answer << material.content
     		end
+    		render_choice.css('response_label').each do |options|
+    			qit_sub_choice << options.xpath('@ident').to_s
+    		end
     		id = "q"+i.to_s;
     		contents['choice'] = qit_sub_answer
+    		contents['option'] = qit_sub_choice
     		questions[id] = contents
+    		question_answer[i] = qit_sub_answer
+    		question_option[i] = qit_sub_choice
     	end
-    	render :text => questions
+    	question_correct_answers = Array.new
+    	xml.css('resprocessing/respcondition/conditionvar/varequal').each do |varequal|
+    		question_correct_answers << varequal.content
+    	end
+    	# render :text => question_correct_answers[0]
     	@answer = questions
     	@question_content = qit_question
+    	@question_answers = question_answer
+    	@question_options = question_option
+    	unless params[:id].nil?
+    		if question_correct_answers[params[:id].to_i] == params[:answer]
+    			render :text => 'true'
+    		else
+    			render :text => 'false'
+    		end
+		end
 	end
 
 

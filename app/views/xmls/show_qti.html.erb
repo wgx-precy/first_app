@@ -2,61 +2,122 @@
 <script>
 $(document).ready(function(){
 	var i = 0;
-	var answers = $('#q_answers').text();
-	console.log(answers);
-	var this_answers = JSON.parse(answers);
-	console.log(this_answers);
+
+	var question_answers = $('#question_answers').text();
+	// console.log(question_answers);
+	var this_question_answers = JSON.parse(question_answers);
+	// console.log(this_question_answers);
+
+	var question_options = $('#question_options').text();
+	// console.log(question_options);
+	var this_question_options = JSON.parse(question_options);
+	// console.log(this_question_options);
+
 	var questions = $('#q_questions').text();
-	console.log(questions);
+	// console.log(questions);
 	var this_questions = JSON.parse(questions);
-	console.log(this_questions);
+	// console.log(this_questions);
+
 	var question_text = "";
 	question_text = question_text+this_questions[i];
 	var radio = "";
-	var length = this_answers['q'+i]['choice'].length;
+	var length = this_question_answers[i].length;
 	for (var j = 0; j < length; j++) {
-		radio = radio + "<input type='radio' name='choice' value="+j+">"+this_answers['q'+i]['choice'][j]+"<br>"; 
+		radio = radio + "<input type='radio' name='choice' value="+this_question_options[i][j]+">"+this_question_answers[i][j]+"<br>"; 
 	};
-	var question_template = "<form>"+radio+"<input type='submit' id='answer_submit'></form> ";
+	var question_template = radio;
 	$(".question").html(question_text);
 	$(".ans").html(question_template);
+	$("#previous_question").attr("disabled","disabled");
+	$("#answer_submit").click(function(e){
+		e.preventDefault();
+		var selected = $('input:checked', '#question_form').val();
+		// alert(selected);
+		$.post('/xmls/show_qti',
+		{
+			id:i,
+		  	answer:selected
+		},function(data){
+			var check_template;
+			if(data == 'true')
+			{
+				check_template = "<p class='result'><font color='green'>correct</font></p>"
+			}
+			else
+			{
+				check_template = "<p class='result'><font color='red'>incorrect</font></p>"
+			}
+			$(".check_result").html(check_template);
+		});
+	});
 	$("#next_question").click(function(){
+		$( ".result" ).remove();
 		i++;
+		if(i > 0)
+		{
+			$("#previous_question").removeAttr("disabled");
+		}
+		if(i == 9)
+		{
+			$("#next_question").attr("disabled","disabled");
+			// $("#answer_submit").attr("disabled","disabled");
+		}
 		question_text = this_questions[i];
 		radio = "";
-		length = this_answers['q'+i]['choice'].length;
+		length = this_question_answers[i].length;
 		for (var j = 0; j < length; j++) {
-			radio = radio + "<input type='radio' name='choice' value="+j+">"+this_answers['q'+i]['choice'][j]+"<br>"; 
+			radio = radio + "<input type='radio' name='choice' value="+this_question_options[i][j]+">"+this_question_answers[i][j]+"<br>"; 
 		};
-		question_template = "<form>"+radio+"<input type='submit' id='answer_submit'></form> ";
+		question_template = radio;
 		$(".question").html(question_text);
 		$(".ans").html(question_template);
 	});
 	$("#previous_question").click(function(){
+		$( ".result" ).remove();
 		i--;
+		if(i == 0)
+		{
+			$("#previous_question").attr("disabled","disable");
+		}
+		if(i < 9)
+		{
+			$("#next_question").removeAttr("disabled");
+			// $("#answer_submit").removeAttr("disabled");
+		}
 		question_text = this_questions[i];
 		radio = "";
-		length = this_answers['q'+i]['choice'].length;
+		length = this_question_answers[i].length;
 		for (var j = 0; j < length; j++) {
-			radio = radio + "<input type='radio' name='choice' value="+j+">"+this_answers['q'+i]['choice'][j]+"<br>"; 
+			radio = radio + "<input type='radio' name='choice' value="+this_question_options[i][j]+">"+this_question_answers[i][j]+"<br>"; 
 		};
-		question_template = "<form>"+radio+"<input type='submit' id='answer_submit'></form> ";
+		question_template = radio;
 		$(".question").html(question_text);
 		$(".ans").html(question_template);
 	});
 });
 </script>
-<%= @answer %>
-<br>
-<br>
-<br>
-<p id="q_answers" hidden><%= @answer.to_json %></p><b>
-<p id="q_questions" hidden><%= @question_content.to_json %></p><b>
-<div class="question">
-</div>
-<div class="ans">
-</div>
 
-
-<button type="button" id="previous_question">Previous</button>
-<button type="button" id="next_question">Next</button>
+<br>
+<br>
+<br>
+<div class='assessment' style='display:inline-block;'>
+	<div class='question_list'>
+		<p>question list</p>
+	</div>
+	<div class='question_template'>
+		<p id="question_answers" hidden><%= @question_answers.to_json %></p><b>
+		<p id="question_options" hidden><%= @question_options.to_json %></p><b>
+		<p id="q_questions" hidden><%= @question_content.to_json %></p><b>
+		<div class="question">
+		</div>
+		<form id='question_form'>
+			<div class="ans">
+			</div>
+		</form>
+		<div class = "check_result">
+		</div>
+		<button type='submit' id='answer_submit'>Check Answer</button>
+		<button type="button" id="previous_question">Previous</button>
+		<button type="button" id="next_question">Next</button>
+	</div>
+</div>

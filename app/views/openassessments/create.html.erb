@@ -1,0 +1,143 @@
+<%= javascript_include_tag 'jquery', 'application' %>
+<style type="text/css">
+div.inline {float:left;}
+.clearBoth {clear:both;}
+</style>
+<script>
+$(document).ready(function(){
+	var question_id = 0;
+	var question_index = 1;
+	var i = 3;
+	var info_body = "Title:<br><input type='text' id='assignment_title' name='title'><br>";
+	var initial_body;
+	var new_body;
+	var title;
+	var body;
+	var question_array = [];
+	var answers = [];
+	var correct_answer;
+	var db_assessment_id = "";
+	$("#create_new").click(function(){
+		$("#assessment_info").html(info_body);
+		document.getElementById("create_question").style.display = "block";
+	});
+	$("#create_question").click(function(){
+		initial_body = "Question "+question_index+" body:<br><input type='text' id='question_body' name='q_body'><br>Answers:<br><input type='radio' id='r1' name='radio' value='1'><input type='text' id='a1' name='a1'><br><input type='radio' id='r2' name='radio' value='2'><input type='text' id='a2' name='a2'><br><input type='radio' id='r3' name='radio' value='3'><input type='text' id='a3' name='a3'><br>"
+		title = $("#assignment_title").val();
+		$.post('/openassessments/create',{
+			tag:"create",
+			qtitle:title
+		},function(data){
+				db_assessment_id = data;
+				console.log("created assignment");
+				$(".template").html(initial_body);
+				// $("#sub_btn").style.display = "block";				
+				document.getElementById("add_more").style.display = "block";
+				document.getElementById("save").style.display = "block";
+				document.getElementById("preview_label").style.display = "block";
+				$("#priview_title").text(title);
+		});
+
+		
+		
+	});
+	$("#add_more").click(function(){
+		++i;
+		new_body = "<input type='radio' id='r"+i+"' name='radio'><input type='text' id='a"+i+"'' name='a"+i+"'><br>";
+		$(".template").append(new_body);
+	});
+	$("#save").click(function(){
+		//clear answers array
+		answers = []
+		title = $("#assignment_title").val();
+		body = $("#question_body").val();
+		question_preview = "<p>Question "+question_index+"//"+db_assessment_id+":  <a>View</a></p>"
+		for (var j = 1; j <= i; j++) {
+			var id = "#a"+j;
+			var sub_answer = $(id).val();
+			var answer = j + "#" + sub_answer;
+			answers.push(answer);
+			correct_answer = $('input[type="radio"]:checked').val();
+			//alert(answers[j-1]);
+		};
+		console.log(question_id);
+		console.log(title);
+		console.log(body);
+		console.log(answers);
+		console.log(correct_answer);
+		$.post('/openassessments/create',{
+			tag:"create_question",
+			aid:db_assessment_id,
+			qid:question_id,
+			qtitle:title,
+			qbody:body,
+			qanswers:answers,
+			qcorrect:correct_answer			
+		},function(data){
+			if(data=="true"){
+				console.log("success");
+				$(".template").empty();
+				document.getElementById("add_new").style.display = "block";
+				document.getElementById("add_more").style.display = "none";
+				document.getElementById("save").style.display = "none";
+				document.getElementById("create_new").style.display = "none";
+				document.getElementById("create_question").style.display = "none";
+				$("#preview_body").append(question_preview);
+			}
+			else{
+				alert(data);
+				console.log("failed");
+			}
+		});
+	});
+	$("#add_new").click(function(){
+		i = 3;
+		question_id++;
+		question_index++;
+		initial_body = "Question "+question_index+" body:<br><input type='text' id='question_body' name='q_body'><br>Answers:<br><input type='radio' id='r1' name='radio' value='1'><input type='text' id='a1' name='a1'><br><input type='radio' id='r2' name='radio' value='2'><input type='text' id='a2' name='a2'><br><input type='radio' id='r3' name='radio' value='3'><input type='text' id='a3' name='a3'><br>"
+		
+		$("#assignment_title").attr('disabled','disabled');
+		$(".template").html(initial_body);
+		document.getElementById("add_new").style.display = "none";
+		document.getElementById("add_more").style.display = "block";
+		document.getElementById("save").style.display = "block";
+		
+	});
+	$("#preview_body").click(function(event){
+		var target = $(event.target);
+		// user_answered_list_last_click = target;
+		// var a_id = target.attr("value");
+		// review(a_id);
+		alert("target");
+	});
+});
+</script>
+<br>
+<button type="button" id="create_new">Create Assignment</button>
+<br>
+<br>
+<button type="button" id="create_question" style="display:none">Add a question</button>
+<br>
+<br>
+<div id="assessment">
+	<div id="create_area">
+		<div id="assessment_info">
+		</div>
+		<form class="template_form">
+			<div class="template">
+			</div>
+		</form>
+
+		<button type="button" id="add_more" style="display:none">Add a choice</button>
+		<br>
+		<button type="button" id="save" style="display:none">Save</button>
+		<br>
+		<button type="button" id="add_new" style="display:none">Add another question</button>
+	</div>
+	<div id="preview_area">
+		<h5 id="preview_label" style="display:none">Assignment</h5>
+		<p id="priview_title"></p>
+		<div id="preview_body">			
+		</div>
+	</div>
+</div>

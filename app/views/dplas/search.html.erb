@@ -3,6 +3,8 @@
 <div class="search">
 	<%= label "#{@dpla}", "search" %>
 	<%= text_field "#{@dpla}", "key" %>
+	<%= label "#{@dpla}", "Format" %>
+	<%= select_tag(:format_key, options_for_select([['text', 'text'], ['image', 'image'],['moving image', 'movingimage'], ['sound', 'sound'],['physical object', 'physicalobject']])) %>
 </div>
 <div class="submit">
 	<%= submit_tag("Search")%>

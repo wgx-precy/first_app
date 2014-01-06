@@ -1,3 +1,14 @@
+GIT
+  remote: git://github.com/mongomapper/mongomapper.git
+  revision: 9b87dee507802a8cb96f2d316802c9fd241448c8
+  tag: v0.13.0.beta2
+  specs:
+    mongo_mapper (0.13.0.beta2)
+      activemodel (>= 3.0.0)
+      activesupport (>= 3.0)
+      mongo (~> 1.8)
+      plucky (~> 0.6.5)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -29,6 +40,9 @@ GEM
     atomic (1.1.14)
     bootstrap-sass (2.3.2.0)
       sass (~> 3.2)
+    bson (1.9.2)
+    bson_ext (1.9.2)
+      bson (~> 1.9.2)
     builder (3.1.4)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
@@ -53,11 +67,15 @@ GEM
     mime-types (1.25)
     mini_portile (0.5.1)
     minitest (4.7.5)
+    mongo (1.9.2)
+      bson (~> 1.9.2)
     multi_json (1.8.0)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     nokogiri-happymapper (0.5.8)
       nokogiri (~> 1.5)
+    plucky (0.6.6)
+      mongo (~> 1.5)
     polyglot (0.3.3)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -115,10 +133,12 @@ PLATFORMS
 
 DEPENDENCIES
   bootstrap-sass (= 2.3.2.0)
+  bson_ext
   builder
   coffee-rails (= 4.0.0)
   jbuilder (= 1.0.2)
   jquery-rails (= 3.0.4)
+  mongo_mapper!
   nokogiri
   nokogiri-happymapper
   rails (= 4.0.0)

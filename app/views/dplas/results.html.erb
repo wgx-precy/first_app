@@ -1,4 +1,46 @@
+<script>
+$(document).ready(function(){
+	var page_index = $('#page_index').val();
+	if(page_index == 0){
+		$("#previous_btn").attr("disabled","disabled");
+		$("#previous_btn2").attr("disabled","disabled");
+	}
+});
+</script>
 
+<%= form_tag( { :action => "results", }, { :method => :post }) do %>
+<div class="search">
+	<%= label "#{@dpla}", "search"%>
+	<%= text_field "#{@dpla}", "key", value:@keyword  %>
+	<%= label "#{@dpla}", "Format" %>
+	<%= select_tag(:format_key, options_for_select([['text', 'text'], ['image', 'image'],['moving image', 'movingimage'], ['sound', 'sound'],['physical object', 'physicalobject']]),:prompt => @format) %>
+</div>
+<div class="submit">
+	<%= submit_tag("Search")%>
+</div>
+<% end %>
+
+<br>
+<br>
+
+<form id='result_control_next'>
+	<div hidden>
+		<input type="text" name="next_page" value="next">
+		<input type="text" name="digital[key]" value= <%= @keyword%>>
+		<input type="text" name="format_key" value=<%= @format%>>
+		<input id="page_index" type="text" name="page_index" value= <%= @page_index%>>
+	</div>
+	<input id="next_btn" type="submit" value="Next Page">
+</form>
+<form id='result_controprevious'>
+	<div hidden>
+		<input type="text" name="previous_page" value="previous">
+		<input type="text" name="digital[key]" value= <%= @keyword%>>
+		<input type="text" name="format_key" value=<%= @format%>>
+		<input id="page_index" type="text" name="page_index" value= <%= @page_index%>>
+	</div>
+	<input id="previous_btn" type="submit" value="Previous Page">
+</form>
 <% @contents.each do |v| %>
 	<ul class="border">
 		<!-- <li><%=v.to_s%></li> -->
@@ -17,6 +59,26 @@
 		<% end %>
 	</ul>
 <% end -%>
+<form id='result_control_next'>
+	<div hidden>
+		<input type="text" name="next_page" value="next">
+		<input type="text" name="digital[key]" value= <%= @keyword%>>
+		<input type="text" name="format_key" value=<%= @format%>>
+		<input id="page_index" type="text" name="page_index" value= <%= @page_index%>>
+	</div>
+	<input id="next_btn" type="submit" value="Next Page">
+</form>
+<form id='result_controprevious'>
+	<div hidden>
+		<input type="text" name="previous_page" value="previous">
+		<input type="text" name="digital[key]" value= <%= @keyword%>>
+		<input type="text" name="format_key" value=<%= @format%>>
+		<input id="page_index" type="text" name="page_index" value= <%= @page_index%>>
+	</div>
+	<input id="previous_btn2" type="submit" value="Previous Page">
+</form>
+<!-- <button type="button" id="previous_page">Previous Page</button>
+<button type="button" id="next_page">Next Page</button> -->
 <!-- <p><%= @return %></p> -->
 		<!-- video type -- ["originalRecord"]["PrimoNMBib"]["record"]["display"]["lds18"] -->
 
